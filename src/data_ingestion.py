@@ -10,6 +10,7 @@ import pandas as pd
 import os
 import logging
 from sklearn.model_selection import train_test_split
+import yaml
 
 
 # this is to make sure our logs directory exists
@@ -33,6 +34,27 @@ file_handler.setFormatter(formatter)
 
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
+
+'''Adding yaml config code '''
+
+def load_params(params_path: str) -> dict:
+    """Load parameters from a YAML file."""
+    try:
+        with open(params_path, 'r') as file:
+            params = yaml.safe_load(file)
+        logger.debug('Parameters retrieved from %s', params_path)
+        return params
+    except FileNotFoundError:
+        logger.error('File not found: %s', params_path)
+        raise
+    except yaml.YAMLError as e:
+        logger.error('YAML error: %s', e)
+        raise
+    except Exception as e:
+        logger.error('Unexpected error: %s', e)
+        raise
+
+
 
 # will be creating data loding function
 
@@ -101,7 +123,10 @@ def save_data(train_df:pd.DataFrame,test_df:pd.DataFrame,data_path:str)->None:
 
 def main():
     try:
-        test_size=0.2
+        '''We are directly accessing test_size parameter from params.yaml'''
+        params = load_params(params_path='params.yaml')
+        test_size = params['data_ingestion']['test_size']
+        # test_size=0.2
         data_path="https://raw.githubusercontent.com/Roahn333singh/Datasets/refs/heads/main/labeled_data.csv"
         df=data_load(data_path=data_path)
         final_df=pre_process(df=df)

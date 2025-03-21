@@ -4,8 +4,55 @@ Building out pipeline:
 3> Add data, model, reports directories to .gitignore file
 4> Now git add ,commit,push 
 
-Setting up dvc pipeline(without params)
+Setting up DVC pipeline(without params)
 5>Create dvc.yml file and stages to it.
 6>dvc init then do "dvc repro" to test the pipeline automation. (check "dvc dag" --> this will help to visualize the flow )
 # dag is called as ->> Directed Acyclic Graph
+# "dvc repo"  --> is also called as dvc reproduce
 7>Now git add commit push
+
+Setting up DVC pipeline (with params)
+8>add params.yaml file
+9>Add the params setup (mentioned below)
+10>Do "dvc repro" again to test the pipeline along with the params
+11>Now git add ,commit ,push
+
+
+
+
+
+# Yaml config code below :->
+
+params.yaml setup:
+1> import yaml
+2> add func:
+
+def load_params(params_path: str) -> dict:
+    """Load parameters from a YAML file."""
+    try:
+        with open(params_path, 'r') as file:
+            params = yaml.safe_load(file)
+        logger.debug('Parameters retrieved from %s', params_path)
+        return params
+    except FileNotFoundError:
+        logger.error('File not found: %s', params_path)
+        raise
+    except yaml.YAMLError as e:
+        logger.error('YAML error: %s', e)
+        raise
+    except Exception as e:
+        logger.error('Unexpected error: %s', e)
+        raise
+
+3> Add to main():
+# data_ingestion
+params = load_params(params_path='params.yaml')
+test_size = params['data_ingestion']['test_size']
+
+# feature_engineering
+params = load_params(params_path='params.yaml')
+max_features = params['feature_engineering']['max_features']
+
+# model_building
+params = load_params('params.yaml')['model_building']
+

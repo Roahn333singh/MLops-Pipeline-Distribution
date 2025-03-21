@@ -5,8 +5,11 @@ stages:
     deps:
     - path: src/data_ingestion.py
       hash: md5
-      md5: cecb058b386dfe0dc2c710706a4d75bc
-      size: 3868
+      md5: b641470def34cc9e4d7dd92cfc2ea1f9
+      size: 4656
+    params:
+      params.yaml:
+        data_ingestion.test_size: 0.2
     outs:
     - path: data/raw
       hash: md5
@@ -41,38 +44,45 @@ stages:
       nfiles: 2
     - path: src/feature_engineering.py
       hash: md5
-      md5: 42df794a8f7634903e8b4afc3628a01c
-      size: 3179
+      md5: 0a4cd189acc12288448fe5ce65a3ab62
+      size: 3958
+    params:
+      params.yaml:
+        feature_engineering.max_feature: 800
     outs:
     - path: data/processed
       hash: md5
-      md5: 1aa1024fd6b6fd0bd03519151a960f02.dir
-      size: 498424084
+      md5: a37219433308c888c22b0d9b6a1e4579.dir
+      size: 81398543
       nfiles: 2
   model_training:
     cmd: python src/model_training.py
     deps:
     - path: data/processed
       hash: md5
-      md5: 1aa1024fd6b6fd0bd03519151a960f02.dir
-      size: 498424084
+      md5: a37219433308c888c22b0d9b6a1e4579.dir
+      size: 81398543
       nfiles: 2
     - path: src/model_training.py
       hash: md5
-      md5: 3ef7e36c2ac483380eaa0dfd1295c93b
-      size: 3397
+      md5: 51152f3eaf2e534ff6177f3afa2bcac5
+      size: 4140
+    params:
+      params.yaml:
+        model_training.n_estimators: 50
+        model_training.random_state: 42
     outs:
     - path: models/model.pkl
       hash: md5
-      md5: fc61c2153b2c5b77dbf0e6936ca2c503
-      size: 18620353
+      md5: 1ff01c05c3cc3a74a6b693bc5c194073
+      size: 7594279
   model_evaluation:
     cmd: python src/model_evaluation.py
     deps:
     - path: models/model.pkl
       hash: md5
-      md5: fc61c2153b2c5b77dbf0e6936ca2c503
-      size: 18620353
+      md5: 1ff01c05c3cc3a74a6b693bc5c194073
+      size: 7594279
     - path: src/model_evaluation.py
       hash: md5
       md5: 12ae04a286d1ba179a16b1a7d8e48cd2
@@ -80,5 +90,5 @@ stages:
     outs:
     - path: reports/metrics.json
       hash: md5
-      md5: 14efb2218be3f3dd345e12832ae339ac
-      size: 164
+      md5: 9de5e0828a5483941378e8e10cae3598
+      size: 166

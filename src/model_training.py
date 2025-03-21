@@ -5,6 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
 import numpy as np
 import pickle
+import yaml
 
 log_dir='logs'
 os.makedirs(log_dir,exist_ok=True)
@@ -26,6 +27,27 @@ file_handler.setFormatter(formatter)
 
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
+
+'''Adding yaml config code'''
+
+def load_params(params_path: str) -> dict:
+    """Load parameters from a YAML file."""
+    try:
+        with open(params_path, 'r') as file:
+            params = yaml.safe_load(file)
+        logger.debug('Parameters retrieved from %s', params_path)
+        return params
+    except FileNotFoundError:
+        logger.error('File not found: %s', params_path)
+        raise
+    except yaml.YAMLError as e:
+        logger.error('YAML error: %s', e)
+        raise
+    except Exception as e:
+        logger.error('Unexpected error: %s', e)
+        raise
+
+'''---------------------------------------------------------------------'''
 
 
 def load_data(data_path:str)->pd.DataFrame:
@@ -95,7 +117,8 @@ def save_model(model,file_path:str)->None:
 
 def main():
     try:
-        params={"n_estimators":100,"random_state":42}
+        params=load_params(params_path='params.yaml')["model_training"]
+        # params={"n_estimators":100,"random_state":42}
         df=load_data("./data/processed/test_tf_idf.csv")
         X_train=df.iloc[:,:-1].values
         y_train=df.iloc[:,-1].values
