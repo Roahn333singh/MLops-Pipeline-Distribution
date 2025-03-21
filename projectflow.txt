@@ -3,3 +3,9 @@ Building out pipeline:
 2> Add src folder,along with all components and running them individually
 3> Add data, model, reports directories to .gitignore file
 4> Now git add ,commit,push 
+
+Setting up dvc pipeline(without params)
+5>Create dvc.yml file and stages to it.
+6>dvc init then do "dvc repro" to test the pipeline automation. (check "dvc dag" --> this will help to visualize the flow )
+# dag is called as ->> Directed Acyclic Graph
+7>Now git add commit push
