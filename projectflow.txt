@@ -1,0 +1,5 @@
+Building out pipeline:
+1> We are creating github repo and cloning it in our local for exxperiments
+2> Add src folder,along with all components and running them individually
+3> Add data, model, reports directories to .gitignore file
+4> Now git add ,commit,push 
