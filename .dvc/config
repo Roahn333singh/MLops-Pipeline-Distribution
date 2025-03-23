@@ -1,0 +1,6 @@
+[core]
+    remote = myremote
+['remote "myremote"']
+    url = s3://elastic-s3-mlops-bucket
+    access_key_id = AKIAW3MEE6JK4GNLH3CF
+    secret_access_key = 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
